@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*-coding: utf-8-*-
 
-import RPi.GPIO as GPIO
-import time
 
-# déclaration des constantes
+"""# déclaration des constantes
 
 n1 = 0
 court = 0.2
@@ -12,7 +10,8 @@ long = court * 3
 espace = court * 7
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(5, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(5, GPIO.OUT, initial=GPIO.LOW)"""
+
 
 MORSE_TO_ALPHABET = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G", "....": "H",
                      "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O", ".--.": "P",
@@ -28,7 +27,7 @@ MORSE_TO_ALPHABET = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", 
 
 
 ALPHABET_TO_MORSE = {"A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".", "F": "..-.", "G": "--.", "H": "....",
-                     "I": "..", ".---": "J",  "K": "-.-", "L": ".-..", "M": "--", "N": "-.",  "O": "---", "P": ".--.",
+                     "I": "..", "J": ".---",  "K": "-.-", "L": ".-..", "M": "--", "N": "-.",  "O": "---", "P": ".--.",
                      "Q": "--.-", "R": ".-.", "S": "...",  "T": "-", "U": "..-",  "V": "...-", "W": ".--", "X": "-..-",
                      "Y": "-.--", "Z": "--..",  "0": "-----",  "1": ".----",  "2": "..---",  "3": "...--", "4": "....-",
                      "5": ".....",  "6": "-....", "7": "--...",  "8": "---..", "9": "----.", '''.''': ".-.-.-",
@@ -44,25 +43,34 @@ class MorseTrad:
     def __init__(self):
         pass
 
+    def text_to_morse(self, value: str) -> str:
+        morse_code = ""
+        for i in range(len(value)):
+            temp_value = str(ALPHABET_TO_MORSE[value[i]])
+
+            morse_code = morse_code + " " + temp_value
+        return morse_code
 
 
 
+if __name__ == "__main__":
+    mon_traducteur = MorseTrad()
+    print(mon_traducteur.text_to_morse("BONJOUR"))
 
 
-
-def longue(temps):
-    """
+"""def longue(temps):
+    
     :param temps: (en input: "court" or "long")
     :return:
     description:
         fait clignoter un lampe "n" fois d'un temps "temps"
-    """
+    
 
     GPIO.output(5, GPIO.HIGH)
     time.sleep(temps)
     GPIO.output(5, GPIO.LOW)
-    time.sleep(court)
+    time.sleep(court)"""
 
 
-# programme principal
-texte = input("'entrez votre texte a traduire")
+""""# programme principal
+texte = input("'entrez votre texte a traduire")"""
