@@ -1,16 +1,4 @@
-#!/usr/bin/env python
-# -*-coding: utf-8-*-
 
-
-"""# déclaration des constantes
-
-n1 = 0
-court = 0.2
-long = court * 3
-espace = court * 7
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(5, GPIO.OUT, initial=GPIO.LOW)"""
 
 
 MORSE_TO_ALPHABET = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G", "....": "H",
@@ -67,19 +55,3 @@ if __name__ == "__main__":
     print(mon_traducteur.text_to_morse("BONJOUR"))
     print(mon_traducteur.morse_to_text("... --- ..."))
 
-"""def longue(temps):
-    
-    :param temps: (en input: "court" or "long")
-    :return:
-    description:
-        fait clignoter un lampe "n" fois d'un temps "temps"
-    
-
-    GPIO.output(5, GPIO.HIGH)
-    time.sleep(temps)
-    GPIO.output(5, GPIO.LOW)
-    time.sleep(court)"""
-
-
-""""# programme principal
-texte = input("'entrez votre texte a traduire")"""
