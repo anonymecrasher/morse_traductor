@@ -31,3 +31,7 @@ class Raspberry:
 
     def get_text_to_show(self):
         pass
+
+if __name__ == "__main__":
+    traducteur_type = Raspberry()
+    traducteur_type.show_morse_code(input("quelle est le texte que vous voulez traduire"))
