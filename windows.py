@@ -5,7 +5,7 @@ import time
 class windows:
     def __init__(self):
         self.morse_time = api.MorseTime()
-        self.bip_sonor = pygame.mixer.Sound("") #il faudra ajouter un fichier sonnor en .ogg ou .wav
+        self.bip_sonor = pygame.mixer.Sound("bip.wav")
     def sons_up(self, temps):
         self.bip_sonor.play()
         time.sleep(temps)
