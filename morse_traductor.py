@@ -25,7 +25,7 @@ class Raspberry:
             for i in letter:
                 if i == ".":
                     self.light_up(self.court)
-                elif i == "_":
+                elif i == "-":
                     self.light_up(self.long)
 
     def get_text_to_show(self):
