@@ -1,3 +1,5 @@
+import time
+
 MORSE_TO_ALPHABET = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G", "....": "H",
                      "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O", ".--.": "P",
                      "--.-": "Q", ".-.": "R", "...": "S", "-": "T", "..-": "U", "...-": "V", ".--": "W", "-..-": "X",
@@ -25,6 +27,7 @@ ALPHABET_TO_MORSE = {"A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".", 
 
 
 def text_to_morse(value: str) -> str:
+    value = value.upper()
     morse_code = ""
     for i in range(len(value)):
         temp_value = str(ALPHABET_TO_MORSE[value[i]])
@@ -43,11 +46,17 @@ def morse_to_text(value: str) -> str:
     return text_code
 
 
+def split_morse(value: str) -> list:
+    morse = text_to_morse(value)
+    return morse.split()
+
+
 class MorseTime:
     def __init__(self, court: float = 0.2):
         self.court = court
         self.long = self.court * 3
         self.space = self.court * 7
+        self.very_short = 0.1
 
 
 if __name__ == "__main__":
