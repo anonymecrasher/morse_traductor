@@ -33,6 +33,7 @@ def text_to_morse(value: str) -> str:
         temp_value = str(ALPHABET_TO_MORSE[value[i]])
 
         morse_code = morse_code + " " + temp_value
+    print(morse_code)
     return morse_code
 
 
@@ -60,6 +61,8 @@ class MorseTime:
 
 
 if __name__ == "__main__":
-    print(text_to_morse("BONJOUR"))
+    print(text_to_morse("BONJOUR JE SUIS TIM"))
+    print(split_morse("BONJOUR JE SUIS TIM"))
     print(morse_to_text("... --- ..."))
+
 
