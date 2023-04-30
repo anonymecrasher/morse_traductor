@@ -18,10 +18,10 @@ class windows:
             for i in letter:
                 if i == ".":
                     self.sons_up(self.morse_time.court)
-                elif i == "_":
+                elif i == "-":
                     self.sons_up(self.morse_time.long)
             time.sleep(self.morse_time.court)
 
 if __name__ == "__main__":
     traducteur_type = windows()
-    traducteur_type.show_morse_code("test")
+    traducteur_type.show_morse_code("TEST")

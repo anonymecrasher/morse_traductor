@@ -22,7 +22,7 @@ class ESP32:
             for i in letter:
                 if i == ".":
                     self.light_up(self.morse_time.court)
-                elif i == "_":
+                elif i == "-":
                     self.light_up(self.morse_time.long)
             time.sleep(self.morse_time.court)
 
