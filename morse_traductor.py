@@ -13,7 +13,7 @@ class Raspberry:
         GPIO.output(5, GPIO.HIGH)
         time.sleep(temps)
         GPIO.output(5, GPIO.LOW)
-        time.sleep(self.court)
+        time.sleep(self.morse_time.court)
 
     def show_morse_code(self, value: str):
         morse_code = api.text_to_morse(value)
