@@ -5,12 +5,14 @@ import time
 class windows:
     def __init__(self):
         self.morse_time = api.MorseTime()
-        self.bip_sonor = pygame.mixer.Sound("") #il faudra ajouter un fichier sonnor en .ogg ou .wav
+        self.bip_sonor = pygame.mixer.Sound("bip.wav") # il faudra ajouter un fichier sonnor en .ogg ou .wav
+
     def sons_up(self, temps):
         self.bip_sonor.play()
         time.sleep(temps)
         self.bip_sonor.stop()
         time.sleep(self.morse_time.court)
+
     def show_morse_code(self, value: str):
         morse_code = api.text_to_morse(value)
         morse_table = morse_code.split(" ")
@@ -21,6 +23,7 @@ class windows:
                 elif i == "-":
                     self.sons_up(self.morse_time.long)
             time.sleep(self.morse_time.court)
+
 
 if __name__ == "__main__":
     traducteur_type = windows()
