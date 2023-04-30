@@ -18,7 +18,7 @@ class Windows:
                     self.bip_sonor.play()
                     time.sleep(self.morse_time.court)
                     self.bip_sonor.stop()
-                    time.sleep(0.1)
+                    time.sleep(self.morse_time.very_short)
                 elif symbol == "-":
                     self.bip_sonor.play()
                     time.sleep(self.morse_time.long)
