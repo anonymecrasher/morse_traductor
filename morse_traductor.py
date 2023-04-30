@@ -18,7 +18,6 @@ class Raspberry:
         GPIO.output(5, GPIO.LOW)
         time.sleep(self.court)
 
-
     def show_morse_code(self, value: str):
         morse_code = self.traducteur.text_to_morse(value)
         morse_table = morse_code.split(" ")
@@ -31,3 +30,8 @@ class Raspberry:
 
     def get_text_to_show(self):
         pass
+
+
+if __name__ == "__main__":
+    traducteur_type = Raspberry()
+    traducteur_type.show_morse_code(input("quel est le texte que voulez vous afficher ?"))
