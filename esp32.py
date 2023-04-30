@@ -23,6 +23,8 @@ class ESP32:
                     time.sleep(self.morse_time.long)
                     self.led.value(0)
                     time.sleep(self.morse_time.very_short)
+                elif symbol == "/":
+                    time.sleep(self.morse_time.space)
             time.sleep(self.morse_time.court)
 
 
