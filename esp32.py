@@ -5,10 +5,7 @@ import api
 
 class ESP32:
     def __init__(self):
-        self.traducteur = api.MorseTrad()
-        self.court = 0.2
-        self.long = self.court * 3
-        self.espace = self.court * 7
+        self.morse_time = api.MorseTime()
         self.button = Pin(17, Pin.IN, Pin.PULL_UP)
         self.led = Pin(16, Pin.OUT)
 
@@ -16,17 +13,18 @@ class ESP32:
         self.led.value(1)
         time.sleep(temps)
         self.led.value(0)
-        time.sleep(self.court)
+        time.sleep(self.morse_time.court)
 
     def show_morse_code(self, value: str):
-        morse_code = self.traducteur.text_to_morse(value)
+        morse_code = api.text_to_morse(value)
         morse_table = morse_code.split(" ")
         for letter in morse_table:
             for i in letter:
                 if i == ".":
-                    self.light_up(self.court)
+                    self.light_up(self.morse_time.court)
                 elif i == "_":
-                    self.light_up(self.long)
+                    self.light_up(self.morse_time.long)
+            time.sleep(self.morse_time.court)
 
     def get_text_to_show(self):
         pass
