@@ -1,6 +1,3 @@
-
-
-
 MORSE_TO_ALPHABET = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G", "....": "H",
                      "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O", ".--.": "P",
                      "--.-": "Q", ".-.": "R", "...": "S", "-": "T", "..-": "U", "...-": "V", ".--": "W", "-..-": "X",
@@ -27,31 +24,33 @@ ALPHABET_TO_MORSE = {"A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".", 
                      '''Ñ''': "--.--",  '''Ö''': "---.",  '''Ŝ''': "...-.",  '''Þ''': ".--..", '''Ü''': "..--"}
 
 
-class MorseTrad:
-    def __init__(self):
-        pass
+def text_to_morse(value: str) -> str:
+    morse_code = ""
+    for i in range(len(value)):
+        temp_value = str(ALPHABET_TO_MORSE[value[i]])
 
-    def text_to_morse(self, value: str) -> str:
-        morse_code = ""
-        for i in range(len(value)):
-            temp_value = str(ALPHABET_TO_MORSE[value[i]])
+        morse_code = morse_code + " " + temp_value
+    return morse_code
 
-            morse_code = morse_code + " " + temp_value
-        return morse_code
 
-    def morse_to_text(self, value: str) -> str:
-        text_code = ""
-        value = value.split(" ")
-        for i in range(len(value)):
-            temp_value = str(MORSE_TO_ALPHABET[value[i]])
+def morse_to_text(value: str) -> str:
+    text_code = ""
+    value = value.split(" ")
+    for i in range(len(value)):
+        temp_value = str(MORSE_TO_ALPHABET[value[i]])
 
-            text_code = text_code + temp_value
-        return text_code
+        text_code = text_code + temp_value
+    return text_code
 
+
+class MorseTime:
+    def __init__(self, court: float = 0.2):
+        self.court = court
+        self.long = self.court * 3
+        self.space = self.court * 7
 
 
 if __name__ == "__main__":
-    mon_traducteur = MorseTrad()
-    print(mon_traducteur.text_to_morse("BONJOUR"))
-    print(mon_traducteur.morse_to_text("... --- ..."))
+    print(text_to_morse("BONJOUR"))
+    print(morse_to_text("... --- ..."))
 
