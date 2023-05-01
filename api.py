@@ -49,8 +49,8 @@ def morse_to_text(value: str) -> str:
 
 
 def split_morse(value: str) -> list:
-    morse = text_to_morse(value)
-    return morse.split()
+    morse_code = text_to_morse(value)
+    return morse_code.split()
 
 
 class MorseTime:
