@@ -54,6 +54,7 @@ class MorseTime:
         self.court = court
         self.long = self.court * 3
         self.space = self.court * 7
+        self.very_short = court / 2
 
 
 if __name__ == "__main__":
