@@ -53,11 +53,12 @@ def split_morse(value: str) -> list:
 
 class MorseTime:
     def __init__(self, court: float = 0.2):
+        if court < 0:
+            court = -court
         self.court = court
         self.long = self.court * 3
         self.space = self.court * 7
         self.very_short = court / 2
-
 
 if __name__ == "__main__":
     print(text_to_morse("BONJOUR"))
