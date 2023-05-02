@@ -1,0 +1,6 @@
+# morse_traductor
+-What is Morse Traductor dude ?
+-It's a tool that allow you to talk to anyone but in morse...
+-What the hec ??? Nobody want to talk in morse bro !
+-Yes I no, but it's fun :smile:
+-...You're crazy...
