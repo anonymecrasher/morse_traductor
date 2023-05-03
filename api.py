@@ -51,6 +51,22 @@ def split_morse(value: str) -> list:
     return morse_code.split()
 
 
+def convert_button_time(button_time: list) -> str:
+    symbol = ""
+    for i in button_time:
+        if 1000000 <= i < 600000000:
+            symbol = symbol + "."
+        elif 600000000 <= i < 1300000000:
+            symbol = symbol + "-"
+        elif 1300000000 <= i < 2600000000:
+            symbol = symbol + " "
+        elif 2600000000 <= i:
+            symbol = symbol + "/"
+        else:
+            raise ValueError
+    return symbol
+
+
 class MorseTime:
     def __init__(self, court: float = 0.2):
         if court < 0:
