@@ -20,6 +20,7 @@ class Windows:
         Description EN:
             -This function is a procedure that will translate a morse code text (example ... --- ...) into a
             beep sound of equivalent duration to morse code.
+
         """
         splited = api.split_morse(value)
         print(splited)

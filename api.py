@@ -40,6 +40,7 @@ def text_to_morse(value: str) -> str:
         (example SOS -> ... --- ...)
         -This function can take into account all the letters of the alphabet, numbers, punctuation and
         also all of the special characters (even if it is strongly advised not to use them).
+
     """
     value = value.upper()
     morse_code = ""
@@ -68,6 +69,7 @@ def morse_to_text(value: str) -> str:
         also all of the special characters (even if it is strongly advised not to use them).
         -ATTENTION we use the character "/" to mean a space between two words and we use the
         character " " to signify a change of letter.
+
     """
     text_code = ""
     value = value.split(" ")
@@ -90,6 +92,7 @@ def split_morse(value: str) -> list:
         -This function calls the "text_to_morse" function to translate a text "value" into morse and then it will
         separate each letter using the split function to return a list containing all the characters of the
         text "value".
+
     """
     morse_code = text_to_morse(value)
     return morse_code.split()
@@ -106,6 +109,7 @@ def convert_button_time(button_time: list) -> str:
     Description EN:
         -This function will convert a list of times from button_time to morse code.
         -ATTENTION the input times are in nanoseconds and the values risk changing enormously over the updates.
+
     """
     symbol = ""
     for i in button_time:
@@ -134,6 +138,7 @@ class MorseTime:
             -Here the objective is to declare a list of constants that will be used for the entire program, it
             are all proportional to the variable "court" so if the times do not suit you you can change
             the value of the "court" variable.
+
         """
         if court < 0:
             court = -court

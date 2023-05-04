@@ -20,6 +20,7 @@ class ESP32:
         Description EN:
             -This function is a procedure that will translate a morse code text (example ... --- ...) into a
             light signal of equivalent duration to morse code.
+
         """
         splited = api.text_to_morse(value)
         for word in splited:
@@ -47,12 +48,12 @@ class ESP32:
         Description EN:
             -This function will retrieve the button press times and return them as a list of
             list of button presses.
+
         """
-        loop = True
         elapsed_time = []
         time.sleep(1)
         print("Now you can push any button !")
-        while loop:
+        while True:
             if self.button_green.value() == 0:
                 is_pressed = time.time_ns()
                 while self.button_green.value() == 0:
@@ -63,7 +64,6 @@ class ESP32:
                     elapsed_time.append(result)
                     time.sleep(0.1)
             elif self.button_red.value() == 0:
-                loop = False
                 return elapsed_time
 
 

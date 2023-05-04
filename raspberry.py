@@ -19,6 +19,7 @@ class Raspberry:
         Description EN:
             -This function is a procedure that will translate a morse code text (example ... --- ...) into a
             light signal of equivalent duration to morse code.
+
         """
         splited = api.text_to_morse(value)
         for word in splited:
