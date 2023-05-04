@@ -10,6 +10,17 @@ class Windows:
         self.bip_sonor = pygame.mixer.Sound("bip.wav") # il faudra ajouter un fichier sonnor en .ogg ou .wav
 
     def sounds(self, value: str):
+        """
+        :param value:(str type)
+        :return None:
+
+        Description FR:
+            -Cette fonction est une procédure qui va a partir d'un texte en morse (exemple ... --- ...) le traduire en
+            bip sonore de durer equivalante au morse.
+        Description EN:
+            -This function is a procedure that will translate a morse code text (example ... --- ...) into a
+            beep sound of equivalent duration to morse code.
+        """
         splited = api.split_morse(value)
         print(splited)
         for letter in splited:

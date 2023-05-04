@@ -10,6 +10,16 @@ class Raspberry:
         GPIO.setup(5, GPIO.OUT, initial=GPIO.LOW)
 
     def light(self, value: str):
+        """
+        :param value: (str type)
+        :return None:
+        Description FR:
+            -Cette fonction est une procédure qui va a partir d'un texte en morse (exemple ... --- ...) le traduire en
+            signal lumineux de durer equivalante au morse.
+        Description EN:
+            -This function is a procedure that will translate a morse code text (example ... --- ...) into a
+            light signal of equivalent duration to morse code.
+        """
         splited = api.text_to_morse(value)
         for word in splited:
             for symbol in word:
