@@ -11,6 +11,17 @@ class ESP32:
         self.led = Pin(16, Pin.OUT)
 
     def light(self, value: str):
+        """
+        :param value: (str type)
+        :return None:
+        Description FR:
+            -Cette fonction est une procédure qui va a partir d'un texte en morse (exemple ... --- ...) le traduire en
+            signal lumineux de durer equivalante au morse.
+        Description EN:
+            -This function is a procedure that will translate a morse code text (example ... --- ...) into a
+            light signal of equivalent duration to morse code.
+
+        """
         splited = api.text_to_morse(value)
         for word in splited:
             for symbol in word:
@@ -29,11 +40,20 @@ class ESP32:
             time.sleep(self.morse_time.court)
 
     def get_button_time(self) -> list:
-        loop = True
+        """
+        :return elapsed_time: (list type)
+        Description FR:
+            -Cette fonction va recuperer les temps d'appuis sur des bouton et va les renvoyer sous forme d'une liste
+            des temps d'appuis.
+        Description EN:
+            -This function will retrieve the button press times and return them as a list of
+            list of button presses.
+
+        """
         elapsed_time = []
         time.sleep(1)
         print("Now you can push any button !")
-        while loop:
+        while True:
             if self.button_green.value() == 0:
                 is_pressed = time.time_ns()
                 while self.button_green.value() == 0:
@@ -44,7 +64,6 @@ class ESP32:
                     elapsed_time.append(result)
                     time.sleep(0.1)
             elif self.button_red.value() == 0:
-                loop = False
                 return elapsed_time
 
 
