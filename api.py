@@ -85,9 +85,9 @@ def split_morse(value: str) -> list:
     :param value: (str type)
     :return morse_code: (list type)
     Description FR:
-        -Cette fonction appel la fonction "text_to_morse" pour traduire un text "value" en morse et par la suite il va
-        separer chaque lettre en uttilisant la fonction split pour renvoyer une liste contenant tout les carractere du
-        texte "value".
+        -Cette fonction appelle la fonction "text_to_morse" pour traduire un text "value" en morse et par la suite il va
+        séparer chaque lettre en uttilisant la fonction split pour renvoyer une liste contenant tout les caractères du
+        text "value".
     Description EN:
         -This function calls the "text_to_morse" function to translate a text "value" into morse and then it will
         separate each letter using the split function to return a list containing all the characters of the
@@ -103,8 +103,8 @@ def convert_button_time(button_time: list) -> str:
     :param button_time: (list type)
     :return symbol: (str type)
     Description FR:
-        -Cette fonction va convertir une liste de temps d'apuis "button_time" sur bouton en code morse.
-        -ATTENTION les temps en entré sont en nanoseconde et les valeur risque d'énormément changer au fil des mise a
+        -Cette fonction transforme une liste de temps en nanosecondes "button_time" sur bouton en code morse.
+        -ATTENTION les temps en entrés sont en nanoseconde et les valeur risque d'énormément changer au fil des mise a
         jour.
     Description EN:
         -This function will convert a list of times from button_time to morse code.
@@ -131,9 +131,9 @@ class MorseTime:
         """
         :param court: (float type)
         Description FR:
-            -Ici l'objectif est de déclarer une liste de constante qui serviront pour l'entiereté du programme, elle
-            sont toute proportionnel a la varriable "court" donc si les temps ne vous convienne pas vous pouvez changer
-            la valeur de la variable "court".
+            -Ici l'objectif est de déclarer une liste de constantes qui serviront pour l'entiereté du programme, elles
+            sont toutes proportionnelles à la varriable "court" donc si les temps ne vous conviennent pas vous pouvez
+            changer la valeur de la variable "court".
         Description EN:
             -Here the objective is to declare a list of constants that will be used for the entire program, it
             are all proportional to the variable "court" so if the times do not suit you you can change
