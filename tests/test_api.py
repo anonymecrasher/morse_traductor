@@ -41,3 +41,13 @@ def test_morse_time(time_input, expected_time):
     assert morse_time.very_short == expected_time / 2
 
 
+@pytest.mark.parametrize("time, expected_symbol", [([], "")])
+def test_convert_button_time(time, expected_symbol):
+    converter = api.convert_button_time(time)
+    assert converter == expected_symbol
+
+
+@pytest.mark.parametrize("time_error_values, expected", [(["a", "b", "c"], TypeError), ([1000000, "a"], TypeError)])
+def test_convert_button_time_with_error(time_error_values, expected):
+    with pytest.raises(TypeError):
+        api.convert_button_time(time_error_values)

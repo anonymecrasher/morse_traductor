@@ -70,19 +70,23 @@ def split_morse(value: str) -> list:
 
 def convert_button_time(button_time: list) -> str:
     """
-    Convert the list of time into a symbol (morse)
+    Convert the list of time into a symbol (morse).
 
     :param button_time: (list type), time in nanosecond
     :return symbol: (str type)
     """
     symbol = ""
     for i in button_time:
+        # Between 0.001s and 0.6
         if 1000000 <= i < 600000000:
             symbol = symbol + "."
+        # Between 0.6s and 1.3s
         elif 600000000 <= i < 1300000000:
             symbol = symbol + "-"
+        # Between 1.3s and 2.6s
         elif 1300000000 <= i < 2600000000:
             symbol = symbol + " "
+        # More than 2.6s
         elif 2600000000 <= i:
             symbol = symbol + "/"
         else:
