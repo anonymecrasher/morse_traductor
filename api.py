@@ -72,7 +72,7 @@ def convert_button_time(button_time: list) -> str:
     """
     Convert the list of time into a symbol (morse)
 
-    :param button_time: (list type)
+    :param button_time: (list type), time in nanosecond
     :return symbol: (str type)
     """
     symbol = ""
