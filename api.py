@@ -88,7 +88,7 @@ def convert_button_time(button_time: list) -> str:
             symbol = symbol + " "
         # More than 2.6s
         elif 2600000000 <= i:
-            symbol = symbol + "/"
+            symbol = symbol + " / "
         else:
             raise ValueError
     return symbol
