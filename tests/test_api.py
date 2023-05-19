@@ -1,5 +1,3 @@
-import py_compile
-
 import pytest
 import api
 
@@ -41,3 +39,5 @@ def test_morse_time(time_input, expected_time):
     assert morse_time.long == expected_time * 3
     assert morse_time.space == expected_time * 7
     assert morse_time.very_short == expected_time / 2
+
+
