@@ -70,21 +70,25 @@ def split_morse(value: str) -> list:
 
 def convert_button_time(button_time: list) -> str:
     """
-    Convert the list of time into a symbol (morse)
+    Convert the list of time into a symbol (morse).
 
     :param button_time: (list type), time in nanosecond
     :return symbol: (str type)
     """
     symbol = ""
     for i in button_time:
+        # Between 0.001s and 0.6
         if 1000000 <= i < 600000000:
             symbol = symbol + "."
+        # Between 0.6s and 1.3s
         elif 600000000 <= i < 1300000000:
             symbol = symbol + "-"
+        # Between 1.3s and 2.6s
         elif 1300000000 <= i < 2600000000:
             symbol = symbol + " "
+        # More than 2.6s
         elif 2600000000 <= i:
-            symbol = symbol + "/"
+            symbol = symbol + " / "
         else:
             raise ValueError
     return symbol
@@ -93,16 +97,8 @@ def convert_button_time(button_time: list) -> str:
 class MorseTime:
     def __init__(self, court: float = 0.2):
         """
+        Initialize the time value for . - /
         :param court: (float type)
-        Description FR:
-            -Ici l'objectif est de déclarer une liste de constantes qui serviront pour l'entiereté du programme, elles
-            sont toutes proportionnelles à la varriable "court" donc si les temps ne vous conviennent pas vous pouvez
-            changer la valeur de la variable "court".
-        Description EN:
-            -Here the objective is to declare a list of constants that will be used for the entire program, it
-            are all proportional to the variable "court" so if the times do not suit you you can change
-            the value of the "court" variable.
-
         """
         if court < 0:
             court = -court
