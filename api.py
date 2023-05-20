@@ -97,16 +97,8 @@ def convert_button_time(button_time: list) -> str:
 class MorseTime:
     def __init__(self, court: float = 0.2):
         """
+        Initialize the time value for . - /
         :param court: (float type)
-        Description FR:
-            -Ici l'objectif est de déclarer une liste de constantes qui serviront pour l'entiereté du programme, elles
-            sont toutes proportionnelles à la varriable "court" donc si les temps ne vous conviennent pas vous pouvez
-            changer la valeur de la variable "court".
-        Description EN:
-            -Here the objective is to declare a list of constants that will be used for the entire program, it
-            are all proportional to the variable "court" so if the times do not suit you you can change
-            the value of the "court" variable.
-
         """
         if court < 0:
             court = -court
