@@ -38,12 +38,15 @@ class interface_graph:
         self.input_text = tk.Entry(self.root_trad).grid(row=1, column=0)
         self.button_trad = tk.Button(self.root_trad, text="trad", command=self.translated).grid(row=1, column=1)
 
+    def getdata(self):
+        text_a_tarduire = self.input_text.get()
+        return text_a_tarduire
+
     def translated(self):
         if self.Type == "windows":
             if self.Mode == "MORSE_TO_ALPHABET":
                 traducteur_type = windows.Windows()
-                text_a_tarduire = self.input_text.get()
-                traducteur_type.sounds(text_a_tarduire)
+                traducteur_type.sounds(self.getdata())
 
 
 if __name__ == "__main__":
