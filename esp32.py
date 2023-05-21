@@ -35,13 +35,8 @@ class ESP32:
 
     def get_button_time(self) -> list:
         """
+        Get a list of timer in nanoseconds. From 1000000 to infinity
         :return elapsed_time: (list type)
-        Description FR:
-            -Cette fonction récupère les temps d'appuis sur des boutons et les met dans une liste
-        Description EN:
-            -This function will retrieve the button press times and return them as a list of
-            list of button presses.
-
         """
         elapsed_time = []
         time.sleep(1)
