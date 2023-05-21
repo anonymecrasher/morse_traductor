@@ -12,15 +12,9 @@ class ESP32:
 
     def light(self, value: str):
         """
+        Convert morse symbols to led signal
         :param value: (str type)
         :return None:
-        Description FR:
-            -Cette fonction est une procédure qui va à partir d'un texte en morse (exemple ... --- ...) le traduire en
-            signal lumineux de durée équivalante.
-        Description EN:
-            -This function is a procedure that will translate a morse code text (example ... --- ...) into a
-            light signal of equivalent duration to morse code.
-
         """
         splited = api.text_to_morse(value)
         for word in splited:
@@ -41,13 +35,8 @@ class ESP32:
 
     def get_button_time(self) -> list:
         """
+        Get a list of timer in nanoseconds. From 1000000 to infinity
         :return elapsed_time: (list type)
-        Description FR:
-            -Cette fonction récupère les temps d'appuis sur des boutons et les met dans une liste
-        Description EN:
-            -This function will retrieve the button press times and return them as a list of
-            list of button presses.
-
         """
         elapsed_time = []
         time.sleep(1)
@@ -67,6 +56,7 @@ class ESP32:
 
 
 if __name__ == "__main__":
+
     esp = ESP32()
     while True:
         if esp.button_red.value() == 0:
