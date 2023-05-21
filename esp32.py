@@ -12,7 +12,7 @@ class ESP32:
 
     def light(self, value: str):
         """
-        Convert morse 
+        Convert morse symbols to led signal
         :param value: (str type)
         :return None:
         """
