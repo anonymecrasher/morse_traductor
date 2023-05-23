@@ -2,7 +2,7 @@ import socket
 import threading
 from ipaddress import ip_network
 
-LOCAL_IP = ip_network("192.168.1.0/24")
+LOCAL_IP = [192, 168, 1, 1]
 addr = ""
 
 
@@ -33,7 +33,9 @@ def receive_pong():
 if __name__ == "__main__":
     receiver = threading.Thread(target=receive_pong)
     receiver.start()
-    for ip in LOCAL_IP:
+    for i in range(255):
+        LOCAL_IP[3] = i
+        ip = ".".join(map(str, LOCAL_IP))
         sender = threading.Thread(target=send_udp_ping, args=(str(ip), 2236,))
         sender.start()
     receiver.join()
