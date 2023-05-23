@@ -1,3 +1,5 @@
+import socket
+
 MORSE_TO_ALPHABET = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G", "....": "H",
                      "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O", ".--.": "P",
                      "--.-": "Q", ".-.": "R", "...": "S", "-": "T", "..-": "U", "...-": "V", ".--": "W", "-..-": "X",
@@ -114,6 +116,15 @@ def ip_range(start_ip: str, end_ip: str) -> list:
                 ip_list.append(".".join(map(str, temp)))
 
     return ip_list
+
+
+def send_udp_ping(host: str, port: int):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sock.sendto(b'ping', (host, port))
+    except OSError as e:
+        print(f"{host} except error: {e}")
+    sock.close()
 
 
 class MorseTime:
