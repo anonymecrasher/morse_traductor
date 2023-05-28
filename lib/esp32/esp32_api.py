@@ -2,10 +2,29 @@ import time
 from machine import Pin
 import api
 import socket
+import _thread
+
+
+def do_connect():
+    import network
+    sta_if = network.WLAN(network.STA_IF)
+    if not sta_if.isconnected():
+        print('connecting to network...')
+        sta_if.active(True)
+        sta_if.connect('On a de la connection FIBRE', 'LmO3eE1cQctC$')
+        while not sta_if.isconnected():
+            pass
+    print('network config:', sta_if.ifconfig())
+
+
+def my_local_ip():
+    import network
+    sta_if = network.WLAN(network.STA_IF)
+    return sta_if.ifconfig()[0]
 
 
 class ESP32:
-    def __init__(self, your_ip: str, port: int = 2236):
+    def __init__(self, name: str, your_ip: str, port: int = 2236):
         self.morse_time = api.MorseTime()
         self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
         self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
@@ -14,16 +33,18 @@ class ESP32:
         # Network var
         self.target_ip = []
         self.port = port
+        self.name = name
         # Like 192.168.1.157
         self.device_ip = your_ip
+        self.splited_ip = list(map(int, self.device_ip.split(".")))
 
-    def light(self, value: str):
+    def light(self, morse: str):
         """
         Convert morse symbols to led signal
         :param value: (str type)
         :return None:
         """
-        splited = api.text_to_morse(value)
+        splited = morse.split()
         for word in splited:
             for symbol in word:
                 if symbol == ".":
@@ -61,43 +82,71 @@ class ESP32:
             elif self.button_red.value() == 0:
                 return elapsed_time
 
-    def receive_pong(self, lock):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind(("", self.port))
-        discovered_host = False
-        while discovered_host is False:
-            data, temp_addr = sock.recvfrom(1024)
-            data = data.decode()
-            if "pong" in data:
-                self.target_ip.append(temp_addr[0])
-                discovered_host = True
-                lock.release()
-
-    def udp_scan(self, base_host: list, port: int = 2236):
+    def udp_scan(self, port: int = 2236):
         """
         Scan all the Network to find if some device are UP to talk in Morse with UDP
         :param base_host: Your local IP -> 192.168.1.97 over the network
         :param port: the port you want to scan (2236)
         :return:
         """
-        base_host[3] = 0
+        host_list = self.splited_ip
         for i in range(255):
-            base_host[3] = i
-            ip = ".".join(map(str, base_host))
+            host_list[3] = i
+            ip = ".".join(map(str, host_list))
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             try:
                 if self.device_ip != ip:
-                    sock.sendto(b'ping', (ip, port))
+                    ping_message = f"ping {self.name} {self.port}"
+                    sock.sendto(ping_message.encode(), (ip, port))
             except OSError as e:
                 print(f"{ip} except error: {e}")
             sock.close()
             time.sleep(0.05)
 
+    def udp_receiver(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.bind(("", self.port))
+
+        error = False
+        while error is False:
+            data, addr = sock.recvfrom(1024)
+            data = data.decode()
+            if "ping" in data:
+                data = data.split(" ")
+                username = data[1]
+                port = int(data[2])
+                pong_message = f"pong {self.name} {self.port}".encode()
+                self.udp_sender(pong_message, addr[0], port)
+                if not addr[0] in self.target_ip:
+                    self.target_ip.append((addr[0], port, username))
+                else:
+                    print(f"{addr[0]} already known")
+            elif "pong" in data:
+                data = data.split(" ")
+                username = data[1]
+                port = int(data[2])
+                if not addr[0] in self.target_ip:
+                    self.target_ip.append((addr[0], port, username))
+                else:
+                    print(f"{addr[0]} already known")
+            else:
+                if api.is_morse(data):
+                    self.light(data)
+
+    def udp_sender(self, message: str, host, port: int = 2236):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        request = f"{message}".encode()
+        try:
+            sock.sendto(request, (host, port))
+        except OSError as e:
+            print(e)
+
 
 if __name__ == "__main__":
-
-    esp = ESP32()
-    while True:
-        if esp.button_red.value() == 0:
-            bla = api.convert_button_time(esp.get_button_time())
-            print(api.morse_to_text(bla))
+    do_connect()
+    esp = ESP32("timtonix", my_local_ip())
+    receiver = _thread.start_new_thread(esp.udp_receiver, ())
+    scaner = _thread.start_new_thread(esp.udp_scan, ())
+    while esp.target_ip == []:
+        pass
+    print(esp.target_ip)
