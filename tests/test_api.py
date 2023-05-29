@@ -56,3 +56,8 @@ def test_convert_button_time_with_error(time_error_values, expected):
 def test_is_morse():
     is_morse = api.is_morse("-- ... / // //// / à adf -")
     assert is_morse is False
+
+
+def test_is_morse():
+    is_morse = api.is_morse("... --- ...")
+    assert is_morse is True
