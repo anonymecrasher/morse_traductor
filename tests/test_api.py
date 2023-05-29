@@ -51,3 +51,8 @@ def test_convert_button_time(time, expected_symbol):
 def test_convert_button_time_with_error(time_error_values, expected):
     with pytest.raises(expected):
         api.convert_button_time(time_error_values)
+
+
+def test_is_morse():
+    is_morse = api.is_morse("-- ... / // //// / à adf -")
+    assert is_morse is False
