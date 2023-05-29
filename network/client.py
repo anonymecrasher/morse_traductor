@@ -18,4 +18,4 @@ while True:
         sock.sendto(message, (addr[0], PORT))
     else:
         print(data)
-        print(f"converted message : {api.morse_to_text(data)}")
+        print(f"converted : {api.morse_to_text(data)}")
