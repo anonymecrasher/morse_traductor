@@ -1,64 +1,34 @@
-import time
-from machine import Pin
+from esp_api import *
 import api
+import _thread
+
+do_connect()
+esp = ESP32("timtonix", my_local_ip())
+
+scan_lock = _thread.allocate_lock()
+scan_lock.acquire()
+
+# Scan for available devices
+receiver = _thread.start_new_thread(esp.udp_receiver, ())
+scaner = _thread.start_new_thread(esp.udp_scan, (2236, scan_lock,))
+
+while esp.target_ip == []:
+    if scan_lock.locked() is True:
+        pass
+    else:
+        print("NO HOST RIP")
+        scan_lock.acquire()
+        scaner = _thread.start_new_thread(esp.udp_scan, (2236, scan_lock,))
+        print("restart")
+
+print(esp.target_ip)
+sended = False
+while sended is False:
+    if esp.button_green.value() == 0:
+        morse_time = esp.get_button_time()
+        morse_message = api.convert_button_time(morse_time)
+        esp.udp_sender(morse_message, esp.target_ip[0][0], esp.target_ip[0][1])
+        sended = True
 
 
-class ESP32:
-    def __init__(self):
-        self.morse_time = api.MorseTime()
-        self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
-        self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
-        self.led = Pin(16, Pin.OUT)
 
-    def light(self, value: str):
-        """
-        Convert morse symbols to led signal
-        :param value: (str type)
-        :return None:
-        """
-        splited = api.text_to_morse(value)
-        for word in splited:
-            for symbol in word:
-                if symbol == ".":
-                    self.led.value(1)
-                    time.sleep(self.morse_time.court)
-                    self.led.value(0)
-                    time.sleep(self.morse_time.very_short)
-                elif symbol == "-":
-                    self.led.value(1)
-                    time.sleep(self.morse_time.long)
-                    self.led.value(0)
-                    time.sleep(self.morse_time.very_short)
-                elif symbol == "/":
-                    time.sleep(self.morse_time.space)
-            time.sleep(self.morse_time.court)
-
-    def get_button_time(self) -> list:
-        """
-        Get a list of timer in nanoseconds. From 1000000 to infinity
-        :return elapsed_time: (list type)
-        """
-        elapsed_time = []
-        time.sleep(1)
-        print("Now you can push any button !")
-        while True:
-            if self.button_green.value() == 0:
-                is_pressed = time.time_ns()
-                while self.button_green.value() == 0:
-                    pass
-                after_pressed = time.time_ns()
-                result = after_pressed - is_pressed
-                if result > 1000000:
-                    elapsed_time.append(result)
-                    time.sleep(0.1)
-            elif self.button_red.value() == 0:
-                return elapsed_time
-
-
-if __name__ == "__main__":
-
-    esp = ESP32()
-    while True:
-        if esp.button_red.value() == 0:
-            bla = api.convert_button_time(esp.get_button_time())
-            print(api.morse_to_text(bla))

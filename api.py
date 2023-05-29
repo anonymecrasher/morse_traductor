@@ -94,26 +94,15 @@ def convert_button_time(button_time: list) -> str:
     return symbol
 
 
-def ip_range(start_ip: str, end_ip: str) -> list:
-    """
-    Return all the IP between the two values
-    :param start_ip:
-    :param end_ip:
-    :return: ip_list: List of IP in range
-    """
-    start = list(map(int, start_ip.split(".")))
-    end = list(map(int, end_ip.split(".")))
-    temp = start
-    ip_list = [start_ip]
-    while temp != end:
-        start[3] += 1
-        for i in (3, 2, 1):
-            if temp[i] == 254:
-                temp[i] = 0
-                temp[i-1] += 1
-                ip_list.append(".".join(map(str, temp)))
-
-    return ip_list
+def is_morse(message: str):
+    for symbols in message:
+        ok = False
+        for expected in [".", "-", " ", "/"]:
+            if symbols == expected:
+                ok = True
+        if ok is False:
+            return False
+    return True
 
 
 class MorseTime:
@@ -133,5 +122,4 @@ class MorseTime:
 if __name__ == "__main__":
     print(text_to_morse("BONJOUR"))
     print(morse_to_text("... --- ..."))
-    ip_range("192.168.1.1", "192.168.1.254")
-
+    print(is_morse("--- --- .. .  ...   . a ."))
