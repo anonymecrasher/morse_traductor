@@ -1,4 +1,6 @@
 import socket
+import api
+
 
 PORT = 2236
 
@@ -16,3 +18,4 @@ while True:
         sock.sendto(message, (addr[0], PORT))
     else:
         print(data)
+        print(f"converted message : {api.morse_to_text(data)}")

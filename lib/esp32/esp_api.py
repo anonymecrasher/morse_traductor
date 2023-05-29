@@ -2,7 +2,6 @@ import time
 from machine import Pin
 import api
 import socket
-import _thread
 
 
 def do_connect():
@@ -82,7 +81,7 @@ class ESP32:
             elif self.button_red.value() == 0:
                 return elapsed_time
 
-    def udp_scan(self, port: int = 2236):
+    def udp_scan(self, port: int = 2236, lock=False):
         """
         Scan all the Network to find if some device are UP to talk in Morse with UDP
         :param base_host: Your local IP -> 192.168.1.97 over the network
@@ -102,6 +101,9 @@ class ESP32:
                 print(f"{ip} except error: {e}")
             sock.close()
             time.sleep(0.05)
+
+        if lock:
+            lock.release()
 
     def udp_receiver(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
