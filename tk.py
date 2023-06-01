@@ -79,6 +79,9 @@ class InterfaceGraph:
                 texte.set(text_temp)
                 text_translated = Label(self.root_trad, textvariable=texte)
                 text_translated.grid(row=2,column=0)
+            elif self.Mode == "SOUND":
+                pass
+                #here we will add the translation or we receive sound (morse code) to translate it into text
 
 if __name__ == "__main__":
     fenetre = InterfaceGraph()
