@@ -9,15 +9,22 @@ class InterfaceGraph:
         self.root_type.grid()
         self.text_intro_root = Label(self.root_type, text="Select translation type")
         self.text_intro_root.grid(row=0, column=0)
-        self.button_window = Button(self.root_type, text="Text to morse", command=self.button_windows)
-        self.button_window.grid(row=1, column=0)
+        self.button_text_to_morse = Button(self.root_type, text="Text to morse", command=self.button_Text_to_morse)
+        self.button_text_to_morse.grid(row=1, column=0)
+        self.button_morse_to_text = Button(self.root_type, text="Morse to text", command=self.button_Morse_to_text)
+        self.button_morse_to_text.grid(row=2, column=0)
         self.root_type.title("Morse traductor")
         self.root_type.mainloop()
 
-    def button_windows(self):
+    def button_Text_to_morse(self):
         self.root_type.destroy()
         self.set_root_mode()
         self.Type = "Text_to_morse"
+
+    def button_Morse_to_text(self):
+        self.root_type.destroy()
+        self.set_root_mode()
+        self.Type = "Morse_to_text"
 
     def set_root_mode(self):
         self.root_mode = Tk()
@@ -25,7 +32,7 @@ class InterfaceGraph:
         self.text_intro_root_mode = Label(self.root_mode, text="Select translation mode")
         self.text_intro_root_mode.grid(row=0, column=0)
         self.button_text_mode = Button(self.root_mode, text="Mode text",
-                                                    command=self.txt_mode_button)
+                                       command=self.txt_mode_button)
         self.button_text_mode.grid(row=1, column=0)
         self.button_sound_mode = Button(self.root_mode, text="Mode sound", command=self.sound_mode_button)
         self.button_sound_mode.grid(row=2, column=0)
@@ -65,7 +72,13 @@ class InterfaceGraph:
                 texte.set(text_temp)
                 text_translated = Label(self.root_trad, textvariable=texte)
                 text_translated.grid(row=2,column=0)
-
+        elif self.Type == "Morse_to_text":
+            if self.Mode == "TEXT":
+                text_temp = api.morse_to_text(str(self.valuee.get()))
+                texte=StringVar()
+                texte.set(text_temp)
+                text_translated = Label(self.root_trad, textvariable=texte)
+                text_translated.grid(row=2,column=0)
 
 if __name__ == "__main__":
     fenetre = InterfaceGraph()
