@@ -1,7 +1,8 @@
 import time
-from machine import Pin
+from machine import Pin, SoftI2C
 import api
 import socket
+import screen
 
 
 def do_connect():
@@ -28,6 +29,8 @@ class ESP32:
         self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
         self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
         self.led = Pin(16, Pin.OUT)
+        self.i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
+        self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
         # Network var
         self.target_ip = []
@@ -72,7 +75,13 @@ class ESP32:
             if self.button_green.value() == 0:
                 is_pressed = time.time_ns()
                 while self.button_green.value() == 0:
-                    pass
+                    while_pressed = time.time_ns()
+                    result = while_pressed - is_pressed
+                    if result > 1000000:
+                        self.oled.fill(0)
+                        self.oled.text(api.time_to_symbol(result), 0, 0)
+                        self.oled.show()
+                self.oled.fill(0)
                 after_pressed = time.time_ns()
                 result = after_pressed - is_pressed
                 if result > 1000000:
