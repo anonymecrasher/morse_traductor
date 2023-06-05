@@ -128,23 +128,7 @@ class ESP32:
                 username = data[1]
                 port = int(data[2])
                 if not addr[0] in self.target_ip:
-                    # Afficher à l'écran
-                    self.oled.fill(0)
-                    self.oled.text(f"Found {username}", 0, 0)
-                    self.oled.text(f"{addr[0]}:{port}", 0, 9)
-                    self.oled.text(f"Add -> Green", 0, 19)
-                    self.oled.text(f"Refuse -> Red", 0, 19)
-                    self.oled.show()
-                    while pressed is False:
-                        if self.green.value == 0:
-                            self.target_ip.append((addr[0], port, username))
-                            pressed = True
-                        elif self.red.value == 0:
-                            self.oled.fill(0)
-                            self.oled.text(f"{username}", 0, 0)
-                            self.oled.text(f"Rejected !", 0, 10)
-                            pressed = True
-
+                    self.check_peer(username, addr[0], port)
                 pong_message = f"pong {self.name} {self.port}".encode()
                 self.udp_sender(pong_message, addr[0], port)
 
@@ -153,28 +137,43 @@ class ESP32:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
-                # Afficher à l'écran
-                self.oled.fill(0)
-                self.oled.text(f"Found {username}", 0, 0)
-                self.oled.text(f"{addr[0]}:{port}", 0, 9)
-                self.oled.show()
                 if not addr[0] in self.target_ip:
-                    self.target_ip.append((addr[0], port, username))
-                else:
-                    print(f"{addr[0]} already known")
-
+                    self.check_peer(username, addr[0], port)
         else:
             if api.is_morse(data):
                 self.light(data)
 
+    def check_peer(self, username, ip, port):
+        # Afficher à l'écran
+        self.oled.fill(0)
+        self.oled.text(f"Found {username}", 0, 0)
+        self.oled.text(f"{ip}:{port}", 0, 9)
+        self.oled.text(f"Add -> Green", 0, 19)
+        self.oled.text(f"Refuse -> Red", 0, 29)
+        self.oled.show()
+        pressed = False
+        while pressed is False:
+            if self.button_green.value() == 0:
+                self.target_ip.append((ip, port, username))
+                self.oled.fill(0)
+                self.oled.text(f"{username}", 0, 0)
+                self.oled.text(f"Accepted !", 0, 10)
+                self.oled.show()
+                pressed = True
+            elif self.button_red.value() == 0:
+                self.oled.fill(0)
+                self.oled.text(f"{username}", 0, 0)
+                self.oled.text(f"Rejected !", 0, 10)
+                self.oled.show()
+                pressed = True
 
-def udp_sender(self, message: str, host, port: int = 2236):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    request = f"{message}".encode()
-    try:
-        sock.sendto(request, (host, port))
-    except OSError as e:
-        print(e)
+    def udp_sender(self, message: str, host, port: int = 2236):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        request = f"{message}".encode()
+        try:
+            sock.sendto(request, (host, port))
+        except OSError as e:
+            print(e)
 
 
 if __name__ == "__main__":
@@ -185,4 +184,5 @@ if __name__ == "__main__":
     while esp.target_ip == []:
         pass
     print(esp.target_ip)
+
 
