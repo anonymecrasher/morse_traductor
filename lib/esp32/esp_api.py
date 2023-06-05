@@ -28,7 +28,10 @@ class ESP32:
         self.morse_time = api.MorseTime()
         self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
         self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
+        self.green_led = Pin(13, Pin.OUT)
         self.yellow_led = Pin(16, Pin.OUT)
+        self.red_led = Pin(14, Pin.OUT)
+
         self.i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
         self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
