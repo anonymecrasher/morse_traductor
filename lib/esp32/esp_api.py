@@ -28,7 +28,7 @@ class ESP32:
         self.morse_time = api.MorseTime()
         self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
         self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
-        self.led = Pin(16, Pin.OUT)
+        self.yellow_led = Pin(16, Pin.OUT)
         self.i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
         self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
@@ -50,14 +50,14 @@ class ESP32:
         for word in splited:
             for symbol in word:
                 if symbol == ".":
-                    self.led.value(1)
+                    self.yellow_led.value(1)
                     time.sleep(self.morse_time.court)
-                    self.led.value(0)
+                    self.yellow_led.value(0)
                     time.sleep(self.morse_time.very_short)
                 elif symbol == "-":
-                    self.led.value(1)
+                    self.yellow_led.value(1)
                     time.sleep(self.morse_time.long)
-                    self.led.value(0)
+                    self.yellow_led.value(0)
                     time.sleep(self.morse_time.very_short)
                 elif symbol == "/":
                     time.sleep(self.morse_time.space)
@@ -98,9 +98,6 @@ class ESP32:
         :param port: the port you want to scan (2236)
         :return:
         """
-        self.oled.fill(0)
-        self.oled.text("Scan in progress", 0, 0)
-        self.oled.show()
         host_list = self.splited_ip
         for i in range(255):
             host_list[3] = i
@@ -130,17 +127,28 @@ class ESP32:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
-                # Afficher à l'écran
-                self.oled.fill(0)
-                self.oled.text(f"Found {username}", 0, 0)
-                self.oled.text(f"{addr[0]}:{port}", 0, 9)
-                self.oled.show()
+                if not addr[0] in self.target_ip:
+                    # Afficher à l'écran
+                    self.oled.fill(0)
+                    self.oled.text(f"Found {username}", 0, 0)
+                    self.oled.text(f"{addr[0]}:{port}", 0, 9)
+                    self.oled.text(f"Add -> Green", 0, 19)
+                    self.oled.text(f"Refuse -> Red", 0, 19)
+                    self.oled.show()
+                    while pressed is False:
+                        if self.green.value == 0:
+                            self.target_ip.append((addr[0], port, username))
+                            pressed = True
+                        elif self.red.value == 0:
+                            self.oled.fill(0)
+                            self.oled.text(f"{username}", 0, 0)
+                            self.oled.text(f"Rejected !", 0, 10)
+                            pressed = True
+
                 pong_message = f"pong {self.name} {self.port}".encode()
                 self.udp_sender(pong_message, addr[0], port)
-                if not addr[0] in self.target_ip:
-                    self.target_ip.append((addr[0], port, username))
-                else:
-                    print(f"{addr[0]} already known")
+
+
             elif "pong" in data:
                 data = data.split(" ")
                 username = data[1]
@@ -154,17 +162,19 @@ class ESP32:
                     self.target_ip.append((addr[0], port, username))
                 else:
                     print(f"{addr[0]} already known")
-            else:
-                if api.is_morse(data):
-                    self.light(data)
 
-    def udp_sender(self, message: str, host, port: int = 2236):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        request = f"{message}".encode()
-        try:
-            sock.sendto(request, (host, port))
-        except OSError as e:
-            print(e)
+        else:
+            if api.is_morse(data):
+                self.light(data)
+
+
+def udp_sender(self, message: str, host, port: int = 2236):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    request = f"{message}".encode()
+    try:
+        sock.sendto(request, (host, port))
+    except OSError as e:
+        print(e)
 
 
 if __name__ == "__main__":
