@@ -79,7 +79,7 @@ class ESP32:
                     result = while_pressed - is_pressed
                     if result > 1000000:
                         self.oled.fill(0)
-                        self.oled.text(api.time_to_symbol(result), 0, 0)
+                        self.oled.text(api.time_to_symbol(result), 64, 32)
                         self.oled.show()
                 after_pressed = time.time_ns()
                 result = after_pressed - is_pressed
@@ -132,16 +132,16 @@ class ESP32:
                 pong_message = f"pong {self.name} {self.port}".encode()
                 self.udp_sender(pong_message, addr[0], port)
 
-
             elif "pong" in data:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
                 if not addr[0] in self.target_ip:
                     self.check_peer(username, addr[0], port)
-        else:
-            if api.is_morse(data):
-                self.light(data)
+
+            else:
+                if api.is_morse(data):
+                    self.light(data)
 
     def check_peer(self, username, ip, port):
         # Afficher à l'écran
@@ -184,5 +184,6 @@ if __name__ == "__main__":
     while esp.target_ip == []:
         pass
     print(esp.target_ip)
+
 
 
