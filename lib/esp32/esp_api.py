@@ -1,7 +1,8 @@
 import time
-from machine import Pin
+from machine import Pin, SoftI2C
 import api
 import socket
+import screen
 
 
 def do_connect():
@@ -27,7 +28,9 @@ class ESP32:
         self.morse_time = api.MorseTime()
         self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
         self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
-        self.led = Pin(16, Pin.OUT)
+        self.yellow_led = Pin(16, Pin.OUT)
+        self.i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
+        self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
         # Network var
         self.target_ip = []
@@ -47,14 +50,14 @@ class ESP32:
         for word in splited:
             for symbol in word:
                 if symbol == ".":
-                    self.led.value(1)
+                    self.yellow_led.value(1)
                     time.sleep(self.morse_time.court)
-                    self.led.value(0)
+                    self.yellow_led.value(0)
                     time.sleep(self.morse_time.very_short)
                 elif symbol == "-":
-                    self.led.value(1)
+                    self.yellow_led.value(1)
                     time.sleep(self.morse_time.long)
-                    self.led.value(0)
+                    self.yellow_led.value(0)
                     time.sleep(self.morse_time.very_short)
                 elif symbol == "/":
                     time.sleep(self.morse_time.space)
@@ -72,10 +75,17 @@ class ESP32:
             if self.button_green.value() == 0:
                 is_pressed = time.time_ns()
                 while self.button_green.value() == 0:
-                    pass
+                    while_pressed = time.time_ns()
+                    result = while_pressed - is_pressed
+                    if result > 1000000:
+                        self.oled.fill(0)
+                        self.oled.text(api.time_to_symbol(result), 0, 0)
+                        self.oled.show()
                 after_pressed = time.time_ns()
                 result = after_pressed - is_pressed
                 if result > 1000000:
+                    self.oled.fill(0)
+                    self.oled.show()
                     elapsed_time.append(result)
                     time.sleep(0.1)
             elif self.button_red.value() == 0:
@@ -117,26 +127,46 @@ class ESP32:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
+                if not addr[0] in self.target_ip:
+                    self.check_peer(username, addr[0], port)
                 pong_message = f"pong {self.name} {self.port}".encode()
                 self.udp_sender(pong_message, addr[0], port)
-                if not addr[0] in self.target_ip:
-                    self.target_ip.append((addr[0], port, username))
-                else:
-                    print(f"{addr[0]} already known")
+
+
             elif "pong" in data:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
                 if not addr[0] in self.target_ip:
-                    self.target_ip.append((addr[0], port, username))
-                else:
-                    print(f"{addr[0]} already known")
+                    self.check_peer(username, addr[0], port)
+        else:
+            if api.is_morse(data):
+                self.light(data)
 
-            elif "quit" in data:
-                error = True
-            else:
-                if api.is_morse(data):
-                    self.light(data)
+    def check_peer(self, username, ip, port):
+        # Afficher à l'écran
+        self.oled.fill(0)
+        self.oled.text(f"Found {username}", 0, 0)
+        self.oled.text(f"{ip}:{port}", 0, 9)
+        self.oled.text(f"Add -> Green", 0, 19)
+        self.oled.text(f"Refuse -> Red", 0, 29)
+        self.oled.show()
+        pressed = False
+        while pressed is False:
+            if self.button_green.value() == 0:
+                self.target_ip.append((ip, port, username))
+                self.oled.fill(0)
+                self.oled.text(f"{username}", 0, 0)
+                self.oled.text(f"Accepted !", 0, 10)
+                self.oled.show()
+                pressed = True
+            elif self.button_red.value() == 0:
+                self.oled.fill(0)
+                self.oled.text(f"{username}", 0, 0)
+                self.oled.text(f"Rejected !", 0, 10)
+                self.oled.show()
+                pressed = True
+
 
     def udp_sender(self, message: str, host, port: int = 2236):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -155,3 +185,5 @@ if __name__ == "__main__":
     while esp.target_ip == []:
         pass
     print(esp.target_ip)
+
+
