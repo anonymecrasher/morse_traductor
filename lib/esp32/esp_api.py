@@ -167,6 +167,7 @@ class ESP32:
                 self.oled.show()
                 pressed = True
 
+
     def udp_sender(self, message: str, host, port: int = 2236):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         request = f"{message}".encode()
