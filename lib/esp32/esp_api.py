@@ -131,6 +131,9 @@ class ESP32:
                     self.target_ip.append((addr[0], port, username))
                 else:
                     print(f"{addr[0]} already known")
+
+            elif "quit" in data:
+                error = True
             else:
                 if api.is_morse(data):
                     self.light(data)
