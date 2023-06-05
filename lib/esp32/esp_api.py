@@ -81,10 +81,11 @@ class ESP32:
                         self.oled.fill(0)
                         self.oled.text(api.time_to_symbol(result), 0, 0)
                         self.oled.show()
-                self.oled.fill(0)
                 after_pressed = time.time_ns()
                 result = after_pressed - is_pressed
                 if result > 1000000:
+                    self.oled.fill(0)
+                    self.oled.show()
                     elapsed_time.append(result)
                     time.sleep(0.1)
             elif self.button_red.value() == 0:
@@ -161,3 +162,4 @@ if __name__ == "__main__":
     while esp.target_ip == []:
         pass
     print(esp.target_ip)
+
