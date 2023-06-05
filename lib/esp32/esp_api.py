@@ -98,6 +98,9 @@ class ESP32:
         :param port: the port you want to scan (2236)
         :return:
         """
+        self.oled.fill(0)
+        self.oled.text("Scan in progress", 0, 0)
+        self.oled.show()
         host_list = self.splited_ip
         for i in range(255):
             host_list[3] = i
@@ -127,6 +130,11 @@ class ESP32:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
+                # Afficher à l'écran
+                self.oled.fill(0)
+                self.oled.text(f"Found {username}", 0, 0)
+                self.oled.text(f"{addr[0]}:{port}", 0, 9)
+                self.oled.show()
                 pong_message = f"pong {self.name} {self.port}".encode()
                 self.udp_sender(pong_message, addr[0], port)
                 if not addr[0] in self.target_ip:
@@ -137,6 +145,11 @@ class ESP32:
                 data = data.split(" ")
                 username = data[1]
                 port = int(data[2])
+                # Afficher à l'écran
+                self.oled.fill(0)
+                self.oled.text(f"Found {username}", 0, 0)
+                self.oled.text(f"{addr[0]}:{port}", 0, 9)
+                self.oled.show()
                 if not addr[0] in self.target_ip:
                     self.target_ip.append((addr[0], port, username))
                 else:
