@@ -36,7 +36,7 @@ class ESP32:
         self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
         # Network var
-        self.target_ip = []
+        self.target_ip = {}
         self.port = port
         self.name = name
         # Like 192.168.1.157
@@ -126,22 +126,18 @@ class ESP32:
         while error is False:
             data, addr = sock.recvfrom(1024)
             data = data.decode()
+            cut_data = data.split(" ")
+            username = cut_data[1]
+            port = int(cut_data[2])
             if "ping" in data:
-                data = data.split(" ")
-                username = data[1]
-                port = int(data[2])
+                print(f"{self.target_ip} {addr[0]}")
                 if not addr[0] in self.target_ip:
                     self.check_peer(username, addr[0], port)
-                pong_message = f"pong {self.name} {self.port}".encode()
+                pong_message = f"pong {self.name} {self.port}"
                 self.udp_sender(pong_message, addr[0], port)
-
             elif "pong" in data:
-                data = data.split(" ")
-                username = data[1]
-                port = int(data[2])
                 if not addr[0] in self.target_ip:
                     self.check_peer(username, addr[0], port)
-
             else:
                 if api.is_morse(data):
                     self.light(data)
@@ -157,7 +153,7 @@ class ESP32:
         pressed = False
         while pressed is False:
             if self.button_green.value() == 0:
-                self.target_ip.append((ip, port, username))
+                self.target_ip[ip] = (username, port)
                 self.oled.fill(0)
                 self.oled.text(f"{username}", 0, 0)
                 self.oled.text(f"Accepted !", 0, 10)
@@ -187,6 +183,7 @@ if __name__ == "__main__":
     while esp.target_ip == []:
         pass
     print(esp.target_ip)
+
 
 
 
