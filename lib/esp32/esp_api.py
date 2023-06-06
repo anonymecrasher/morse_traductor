@@ -129,15 +129,19 @@ class ESP32:
             cut_data = data.split(" ")
             username = cut_data[1]
             port = int(cut_data[2])
+
+
+
             if "ping" in data:
                 print(f"{self.target_ip} {addr[0]}")
                 if not addr[0] in self.target_ip:
                     self.check_peer(username, addr[0], port)
                 pong_message = f"pong {self.name} {self.port}"
                 self.udp_sender(pong_message, addr[0], port)
-            elif "pong" in data:
-                if not addr[0] in self.target_ip:
-                    self.check_peer(username, addr[0], port)
+            elif "pong" in data and addr[0] not in self.target_ip:
+                self.check_peer(username, addr[0], port)
+            elif "pong" in data and port != self.target_ip[addr[0]][1]:
+                print("wtf")
             else:
                 if api.is_morse(data):
                     self.light(data)
