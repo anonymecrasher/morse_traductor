@@ -103,12 +103,10 @@ def time_to_symbol(time: int):
 
 
 def is_morse(message: str):
-    for symbols in message:
-        ok = False
-        for expected in [".", "-", " ", "/"]:
-            if symbols == expected:
-                ok = True
-        if ok is False:
+    for symbol in message:
+        if symbol in ".- /":
+            pass
+        else:
             return False
     return True
 

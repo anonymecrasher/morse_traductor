@@ -28,12 +28,15 @@ class ESP32:
         self.morse_time = api.MorseTime()
         self.button_green = Pin(17, Pin.IN, Pin.PULL_UP)
         self.button_red = Pin(18, Pin.IN, Pin.PULL_UP)
+        self.green_led = Pin(13, Pin.OUT)
         self.yellow_led = Pin(16, Pin.OUT)
+        self.red_led = Pin(14, Pin.OUT)
+        self.buzzer = Pin(4, Pin.OUT)
         self.i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
         self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
         # Network var
-        self.target_ip = []
+        self.target_ip = {}
         self.port = port
         self.name = name
         # Like 192.168.1.157
@@ -79,7 +82,7 @@ class ESP32:
                     result = while_pressed - is_pressed
                     if result > 1000000:
                         self.oled.fill(0)
-                        self.oled.text(api.time_to_symbol(result), 0, 0)
+                        self.oled.text(api.time_to_symbol(result), 64, 32)
                         self.oled.show()
                 after_pressed = time.time_ns()
                 result = after_pressed - is_pressed
@@ -123,25 +126,25 @@ class ESP32:
         while error is False:
             data, addr = sock.recvfrom(1024)
             data = data.decode()
+            cut_data = data.split(" ")
+            username = cut_data[1]
+            port = int(cut_data[2])
+
+
+
             if "ping" in data:
-                data = data.split(" ")
-                username = data[1]
-                port = int(data[2])
+                print(f"{self.target_ip} {addr[0]}")
                 if not addr[0] in self.target_ip:
                     self.check_peer(username, addr[0], port)
-                pong_message = f"pong {self.name} {self.port}".encode()
+                pong_message = f"pong {self.name} {self.port}"
                 self.udp_sender(pong_message, addr[0], port)
-
-
-            elif "pong" in data:
-                data = data.split(" ")
-                username = data[1]
-                port = int(data[2])
-                if not addr[0] in self.target_ip:
-                    self.check_peer(username, addr[0], port)
-        else:
-            if api.is_morse(data):
-                self.light(data)
+            elif "pong" in data and addr[0] not in self.target_ip:
+                self.check_peer(username, addr[0], port)
+            elif "pong" in data and port != self.target_ip[addr[0]][1]:
+                print("wtf")
+            else:
+                if api.is_morse(data):
+                    self.light(data)
 
     def check_peer(self, username, ip, port):
         # Afficher à l'écran
@@ -154,7 +157,7 @@ class ESP32:
         pressed = False
         while pressed is False:
             if self.button_green.value() == 0:
-                self.target_ip.append((ip, port, username))
+                self.target_ip[ip] = (username, port)
                 self.oled.fill(0)
                 self.oled.text(f"{username}", 0, 0)
                 self.oled.text(f"Accepted !", 0, 10)
@@ -185,5 +188,7 @@ if __name__ == "__main__":
     while esp.target_ip == []:
         pass
     print(esp.target_ip)
+
+
 
 
