@@ -102,18 +102,18 @@ class ESP32:
         :return:
         """
         host_list = self.splited_ip
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        ping_message = f"ping {self.name} {self.port}"
         for i in range(255):
             host_list[3] = i
             ip = ".".join(map(str, host_list))
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             try:
                 if self.device_ip != ip:
-                    ping_message = f"ping {self.name} {self.port}"
                     sock.sendto(ping_message.encode(), (ip, port))
             except OSError as e:
                 print(f"{ip} except error: {e}")
-            sock.close()
             time.sleep(0.05)
+        sock.close()
 
         if lock:
             lock.release()

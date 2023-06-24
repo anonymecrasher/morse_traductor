@@ -16,13 +16,23 @@ def get_hostname() -> list:
 
 
 class UDPClient:
-    def __init__(self, port):
+    def __init__(self, name, port):
+        self.name = name
         self.port = port
         self.client_ip = get_hostname()
-
+        self.split_ip = list(map(int, self.client_ip[0].split(".")))
 
     def scanner(self):
         # TODO: initialiser le scanner
+        host_list = self.split_ip
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        ping_message = f"ping {self.name} {self.port}"
+        for i in range(255):
+            host_list[3] = i
+            ip = ".".join(map(str, host_list))
+            try:
+                if self.client_ip[0] != ip:
+
         pass
 
     def receiver(self):
