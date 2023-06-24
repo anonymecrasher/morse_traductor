@@ -3,7 +3,7 @@ import api
 import netifaces
 import threading
 import os
-
+import time
 
 def get_hostname() -> list:
     host = []
@@ -32,6 +32,11 @@ class UDPClient:
             ip = ".".join(map(str, host_list))
             try:
                 if self.client_ip[0] != ip:
+                    sock.sendto(ping_message.encode(), (ip, self.port))
+            except OSError as e:
+                print(f"{ip} except an error : {e}")
+            time.sleep(0.05)
+        sock.close()
 
         pass
 
