@@ -22,6 +22,7 @@ class UDPClient:
 
 
     def scanner(self):
+        # TODO: initialiser le scanner
         pass
 
     def receiver(self):
@@ -44,6 +45,11 @@ class UDPClient:
             else:
                 print(data)
                 print(f"converted : {api.morse_to_text(data)}")
+
+    def sender(self):
+        # TODO: initialiser le sender
+        pass
+
 
 
 
