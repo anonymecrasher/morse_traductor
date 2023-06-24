@@ -5,13 +5,13 @@ import os
 
 PORT = 2236
 
-
 class UDPClient:
     def __init__(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect()
-        socket.getsockname()
-        self.client_ip = socket.gethostname()
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect(('0.0.0.0', 2236))
+        
+        self.client_ip = sock.getsockname()[0]
+        sock.close()
 
     def scanner(self):
         pass
@@ -45,4 +45,4 @@ class UDPClient:
 
 if __name__ == "__main__":
     client = UDPClient()
-    print(UDPClient.client_ip)
+    print(client.client_ip)
