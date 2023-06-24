@@ -5,6 +5,7 @@ import threading
 import os
 import time
 
+
 def get_hostname() -> list:
     host = []
     for interface in netifaces.interfaces():
@@ -61,13 +62,16 @@ class UDPClient:
                 print(data)
                 print(f"converted : {api.morse_to_text(data)}")
 
-    def sender(self):
+    def sender(self, message: str, ip: str, port: int = 2236):
         # TODO: initialiser le sender
-        pass
-
-
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        request = f"{message}".encode()
+        try:
+            sock.sendto(request, (ip, port))
+        except OSError as e:
+            print(e)
 
 
 if __name__ == "__main__":
-    client = UDPClient(2236)
+    client = UDPClient("timtonix", 2236)
     print(client.client_ip)
