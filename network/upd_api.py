@@ -52,7 +52,7 @@ class UDPClient:
                 data = data.split(" ")
                 print(f"Pinged by {addr[0]} {data[1]}")
                 message = f"pong server {self.port}".encode()
-                sock.sendto(message, (addr[0], self.port))
+                sock.sendto(message, (addr[0], data[2]))
             elif "pong" in data:
                 data = data.split(" ")
                 print(f"Ponged by {data[1]}")
