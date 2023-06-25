@@ -22,6 +22,7 @@ class UDPClient:
         self.port = port
         self.client_ip = get_hostname()
         self.split_ip = list(map(int, self.client_ip[0].split(".")))
+        self.peers = {}
 
     def scanner(self):
         host_list = self.split_ip
@@ -67,6 +68,9 @@ class UDPClient:
             sock.sendto(request, (ip, port))
         except OSError as e:
             print(e)
+
+    def add_peer(self, pseudo, ip, port):
+        pass
 
 
 if __name__ == "__main__":
