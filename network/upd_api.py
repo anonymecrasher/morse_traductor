@@ -69,8 +69,9 @@ class UDPClient:
         except OSError as e:
             print(e)
 
-    def add_peer(self, pseudo, ip, port):
-        pass
+    def add_peer(self, pseudo: str, ip: str, port: int):
+        if ip != self.client_ip:
+            self.peers[ip] = (pseudo, port)
 
 
 if __name__ == "__main__":
