@@ -24,7 +24,6 @@ class UDPClient:
         self.split_ip = list(map(int, self.client_ip[0].split(".")))
 
     def scanner(self):
-        # TODO: initialiser le scanner
         host_list = self.split_ip
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         ping_message = f"ping {self.name} {self.port}"
@@ -49,9 +48,8 @@ class UDPClient:
             data, addr = sock.recvfrom(1024)
             data = data.decode("utf-8")
             if "ping" in data:
-                host = addr[0]
                 data = data.split(" ")
-                print(f"pinged by {addr[0]} {data[1]}")
+                print(f"Pinged by {addr[0]} {data[1]}")
                 message = f"pong server {self.port}".encode()
                 sock.sendto(message, (addr[0], self.port))
             elif "pong" in data:
@@ -63,7 +61,6 @@ class UDPClient:
                 print(f"converted : {api.morse_to_text(data)}")
 
     def sender(self, message: str, ip: str, port: int = 2236):
-        # TODO: initialiser le sender
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         request = f"{message}".encode()
         try:
