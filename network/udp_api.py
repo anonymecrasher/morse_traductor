@@ -1,5 +1,5 @@
 import socket
-from default import api
+import default.api as api
 import netifaces
 import time
 
