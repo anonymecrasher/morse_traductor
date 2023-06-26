@@ -2,13 +2,16 @@ import time
 import udp_api
 import typer
 from yaspin import yaspin
-import inquirer
+from inquirer import Text, List
 
 app = typer.Typer()
 
 
 def main(pseudo: str, port: int):
-    udp= udp_api.UDPClient(pseudo, port)
+    udp = udp_api.UDPClient(pseudo, port)
+    choice = List(name="choice", message="What do you want to do ?", choices=["scan", "wait", "send"], default="scan")
+    if choice == "scan":
+        print("Good choice")
 
 
 @yaspin(text="Waiting for a peer...")
