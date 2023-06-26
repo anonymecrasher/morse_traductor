@@ -1,19 +1,14 @@
 import time
 import udp_api
-import typer
 from yaspin import yaspin
-from inquirer import Text, List, prompt
-
-app = typer.Typer()
+import click
 
 
+@click.command()
+@click.option("--pseudo", default="guest", help="The name that peers will see")
+@click.option("--port", default=2236, help="Port to communicate with peers")
 def main(pseudo: str, port: int):
-    print("ok")
-    udp = udp_api.UDPClient(pseudo, port)
-    choice = [List(name="choice", message="What do you want to do ?", choices=["scan", "wait", "send"], default="scan")]
-    prompt(choice)
-    if choice == "scan":
-        print("Good choice")
+
 
 
 @yaspin(text="Waiting for a peer...")
@@ -23,6 +18,6 @@ def scan():
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    pass
 
 
