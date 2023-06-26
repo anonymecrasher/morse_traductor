@@ -1,6 +1,6 @@
 import time
 from machine import Pin, SoftI2C
-import api
+from default import api
 import socket
 import screen
 

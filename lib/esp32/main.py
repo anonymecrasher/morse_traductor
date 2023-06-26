@@ -1,5 +1,5 @@
 from esp_api import *
-import api
+from default import api
 import _thread
 
 do_connect()

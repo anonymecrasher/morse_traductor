@@ -1,8 +1,6 @@
 import socket
-import api
+from default import api
 import netifaces
-import threading
-import os
 import time
 
 

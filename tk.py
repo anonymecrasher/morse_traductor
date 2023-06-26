@@ -1,5 +1,5 @@
 from tkinter import *
-import api
+from default import api
 import windows
 
 
