@@ -7,8 +7,8 @@ import click
 @click.command()
 @click.option("--pseudo", prompt="Your name", help="The name that peers will see")
 @click.option("--port", default=2236, help="Port to communicate with peers")
-@click.option("--receiver", default="on", help="[on] you are reachable \n [off] you are unreachable")
-@click.option("--discoverable", default="on", help="[on]  You respond to ping\n [off] you don't respond")
+@click.option("--reachable", default="on", help="[on] you are reachable \n [off] you are unreachable")
+@click.option("--discoverable", default="on", help="[on]  You respond to ping\n [off] you don't respond \n (--reachable must be [on])")
 def main(pseudo: str, port: int):
 
 
