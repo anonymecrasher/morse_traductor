@@ -9,8 +9,8 @@ import click
 @click.option("--port", default=2236, help="Port to communicate with peers")
 @click.option("--reachable", default="on", help="[on] you are reachable \n [off] you are unreachable")
 @click.option("--discoverable", default="on", help="[on]  You respond to ping\n [off] you don't respond \n (--reachable must be [on])")
-def main(pseudo: str, port: int):
-
+def main(pseudo: str, port: int, reachable: str, discoverable: str):
+    client = udp_api.UDPClient(pseudo, port)
 
 
 @yaspin(text="Waiting for a peer...")

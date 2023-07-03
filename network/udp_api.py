@@ -15,12 +15,14 @@ def get_hostname() -> list:
 
 
 class UDPClient:
-    def __init__(self, name, port):
+    def __init__(self, name, port, reachable: str = "on", discoverable: str = "on"):
         self.name = name
         self.port = port
         self.client_ip = get_hostname()
         self.split_ip = list(map(int, self.client_ip[0].split(".")))
         self.peers = {}
+        self.discoverable = discoverable
+        self.reachable = reachable
 
     def scanner(self):
         host_list = self.split_ip
