@@ -7,9 +7,10 @@ import click
 @click.command()
 @click.option("--pseudo", prompt="Your name", help="The name that peers will see")
 @click.option("--port", default=2236, help="Port to communicate with peers")
+@click.option("--receiver", default="on", help="Receiver mode [on] authorize peers to send you messages")
+@click.option("--", default="on", help="Receiver mode [on] authorize peers to send you messages")
 def main(pseudo: str, port: int):
-    print(pseudo)
-    print(port)
+
 
 
 @yaspin(text="Waiting for a peer...")
