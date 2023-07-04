@@ -1,5 +1,5 @@
 import pytest
-import api
+from default import api
 
 
 @pytest.mark.parametrize("text_input,expected", [("MORSE", "-- --- .-. ... ."), ("morse", "-- --- .-. ... ."),

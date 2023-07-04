@@ -1,5 +1,5 @@
 import pygame
-import api
+from default import api
 import time
 
 
