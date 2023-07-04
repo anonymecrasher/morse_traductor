@@ -18,13 +18,16 @@ def main(pseudo: str, port: int, reachable: str, discoverable: str):
     assert reachable != ""
     assert discoverable != ""
     client = udp_api.UDPClient(pseudo, port, reachable, discoverable)
+    if reachable == "on":
+        client.receiver()
     choice = inquirer.list_input("What do you want to do ?", choices=["Scan network", "Send message to a peer", "Send "
                                                                       "message to an unknown ip",
                                                                       "Ping an IP", "Wait for some messages"])
 
     match choice:
         case "Scan network":
-            scan(client)
+            with yaspin(text="Waiting for a peer", color="yellow"):
+                client.scanner()
         case "Send message to a peer":
             pass
         case "Send message to an unknown ip":
@@ -34,11 +37,12 @@ def main(pseudo: str, port: int, reachable: str, discoverable: str):
         case  "Wait for some messages":
             pass
 
+    time.sleep(5)
+    print("HEY")
 
 
-@yaspin(text="Waiting for a peer...")
-def scan(client):
-    threading.Thread(target=client.scanner, args=())
+
+
 
 
 if __name__ == "__main__":

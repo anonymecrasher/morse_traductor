@@ -39,8 +39,6 @@ class UDPClient:
             time.sleep(0.05)
         sock.close()
 
-        pass
-
     def receiver(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(("", self.port))
