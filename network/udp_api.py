@@ -15,7 +15,7 @@ def get_hostname() -> list:
 
 
 class UDPClient:
-    def __init__(self, name, port, reachable: str = "on", discoverable: str = "on"):
+    def __init__(self, name, port: int = 2236, reachable: str = "on", discoverable: str = "on"):
         self.name = name
         self.port = port
         self.client_ip = get_hostname()

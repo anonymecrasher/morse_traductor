@@ -17,13 +17,12 @@ def main(pseudo: str, port: int, reachable: str, discoverable: str):
     assert port != ""
     assert reachable != ""
     assert discoverable != ""
+
     client = udp_api.UDPClient(pseudo, port, reachable, discoverable)
     if reachable == "on":
         receiver = threading.Thread(target=client.receiver)
         print(f"✅ Your IP address is {client.client_ip[0]} \n You are listening on {port}")
-    choice = inquirer.list_input("What do you want to do ?", choices=["Scan network", "Send message to a peer", "Send "
-                                                                      "message to an unknown ip",
-                                                                      "Ping an IP", "Wait for some messages"])
+    choice = inquirer.list_input("What do you want to do ?", choices=["Scan network", "Send message to a peer", "Send message to an unknown ip", "Ping an IP", "Wait for some messages"])
 
     match choice:
         case "Scan network":
@@ -44,7 +43,5 @@ def main(pseudo: str, port: int, reachable: str, discoverable: str):
 
 
 
-
-
-if __name__ == "__main__":
+if __name__ == "__main__" :
     main()
