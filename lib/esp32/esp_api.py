@@ -36,6 +36,7 @@ class ESP32:
         self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
         # Network var
+        # {"ip": ("username", 2236)} <- as an example
         self.target_ip = {}
         self.port = port
         self.name = name
@@ -129,13 +130,15 @@ class ESP32:
             split = data.split(" ")
             if "ping" in data or "pong" in data:
                 if addr[0] in self.target_ip:
-                    print("user already auth")
+                    print("user have already been accepted")
                     continue
 
                 username = split[1]
-                if self.check_peer(username, addr[0], self.port):
+                if self.check_peer(username, addr[0], self.port) and "ping" in data:
                     pong_message = f"pong {self.name}"
                     self.udp_sender(pong_message, addr[0], self.port)
+                elif self.check_peer(username, addr[0], self.port) and "pong" in data:
+                    print("user accepted")
             else:
                 if api.is_morse(data):
                     self.light(data)
@@ -178,7 +181,7 @@ if __name__ == "__main__":
     esp = ESP32("timtonix", my_local_ip())
     receiver = _thread.start_new_thread(esp.udp_receiver, ())
     scaner = _thread.start_new_thread(esp.udp_scan, ())
-    while esp.target_ip == []:
+    while esp.target_ip == {}:
         pass
     print(esp.target_ip)
 
