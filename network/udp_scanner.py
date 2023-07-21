@@ -30,7 +30,7 @@ def receive_pong():
             discovered_host = True
 
 
-def send_message(message: str, host, port):
+def send_message(message: str, host, port=2236):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     request = message.encode()
     try:
@@ -38,6 +38,8 @@ def send_message(message: str, host, port):
     except OSError:
         print("Mon vieux t mort")
 
+
 if __name__ == "__main__":
     receiver = threading.Thread(target=receive_pong)
     receiver.start()
+    send_message("ping", "192.168.1.157")
