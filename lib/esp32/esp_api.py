@@ -136,6 +136,8 @@ class ESP32:
                 # Does hte ping contain a nickname -> ping timtonix
                 if len(split) >= 2:
                     username = split[1]
+                else:
+                    username = "anonyme"
 
                 if self.check_peer(username, addr[0], self.port) and "ping" in data:
                     pong_message = f"pong {self.name}"
