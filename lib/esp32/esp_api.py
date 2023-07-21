@@ -139,6 +139,7 @@ class ESP32:
                 else:
                     username = "anonyme"
 
+                print(f"{addr[0]} is {username}")
                 if self.check_peer(username, addr[0], self.port) and "ping" in data:
                     pong_message = f"pong {self.name}"
                     self.udp_sender(pong_message, addr[0], self.port)
