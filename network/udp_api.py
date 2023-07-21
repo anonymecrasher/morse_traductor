@@ -42,16 +42,15 @@ class UDPClient:
     def receiver(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.bind(("", self.port))
-        print("Receiver have been bound !")
+        print("Receiver have been setup !")
         while True:
             data, addr = sock.recvfrom(1024)
             data = data.decode("utf-8")
             if "ping" in data:
-                self.handle_ping(data, addr, sock)
+                self.handle_ping(addr, sock)
             elif "pong" in data:
                 data = data.split(" ")
                 print(f"Ponged by {data[1]}")
-                print(data)
             else:
                 print(data)
                 print(f"converted : {api.morse_to_text(data)}")
@@ -68,13 +67,11 @@ class UDPClient:
         if ip != self.client_ip:
             self.peers[ip] = (pseudo, port)
 
-
-    def handle_ping(self, data: str, addr: tuple, sock: object):
-        data = data.split(" ")
-        print(f"Pinged by {addr[0]} {data[1]}")
+    def handle_ping(self, addr: tuple, sock: object):
         message = f"pong server {self.port}".encode()
-        sock.sendto(message, (addr[0], data[2]))
+        sock.sendto(message, (addr[0], self.port))
 
 if __name__ == "__main__":
     client = UDPClient("timtonix", 2236)
     print(client.client_ip)
+    client.receiver()
