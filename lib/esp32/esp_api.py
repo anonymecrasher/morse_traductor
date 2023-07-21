@@ -131,6 +131,8 @@ class ESP32:
             if "ping" in data or "pong" in data:
                 if addr[0] in self.target_ip:
                     print("user have already been accepted")
+                    # We send the pong anyway, Maybe the peer lost connection and is scanning the network again
+                    self.udp_sender(f"pong {self.name}", addr[0], self.port)
                     continue
 
                 # Does hte ping contain a nickname -> ping timtonix
@@ -141,8 +143,8 @@ class ESP32:
 
                 print(f"{addr[0]} is {username}")
                 if self.check_peer(username, addr[0], self.port) and "ping" in data:
-                    pong_message = f"pong {self.name}"
-                    self.udp_sender(pong_message, addr[0], self.port)
+                    self.udp_sender(f"pong {self.name}", addr[0], self.port)
+                    print("ponged")
                 elif self.check_peer(username, addr[0], self.port) and "pong" in data:
                     print("user accepted")
             else:

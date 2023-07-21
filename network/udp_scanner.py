@@ -28,7 +28,7 @@ def receive_pong():
         if "pong" in data:
             addr = addr[0]
             discovered_host = True
-
+        print(data)
 
 def send_message(message: str, host, port=2236):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -40,6 +40,6 @@ def send_message(message: str, host, port=2236):
 
 
 if __name__ == "__main__":
+    send_message("ping", "192.168.1.157")
     receiver = threading.Thread(target=receive_pong)
     receiver.start()
-    send_message("ping", "192.168.1.157")
