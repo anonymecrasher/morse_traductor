@@ -36,6 +36,7 @@ class ESP32:
         self.oled = screen.SSD1306_I2C(128, 64, self.i2c)
 
         # Network var
+        # {"ip": ("username", 2236)} <- as an example
         self.target_ip = {}
         self.port = port
         self.name = name
@@ -126,49 +127,53 @@ class ESP32:
         while error is False:
             data, addr = sock.recvfrom(1024)
             data = data.decode()
-            cut_data = data.split(" ")
-            username = cut_data[1]
-            port = int(cut_data[2])
+            split = data.split(" ")
+            if "ping" in data or "pong" in data:
+                if addr[0] in self.target_ip:
+                    print("user have already been accepted")
+                    # We send the pong anyway, Maybe the peer lost connection and is scanning the network again
+                    self.udp_sender(f"pong {self.name}", addr[0], self.port)
+                    continue
 
+                # Does hte ping contain a nickname -> ping timtonix
+                if len(split) >= 2:
+                    username = split[1]
+                else:
+                    username = "anonyme"
 
-
-            if "ping" in data:
-                print(f"{self.target_ip} {addr[0]}")
-                if not addr[0] in self.target_ip:
-                    self.check_peer(username, addr[0], port)
-                pong_message = f"pong {self.name} {self.port}"
-                self.udp_sender(pong_message, addr[0], port)
-            elif "pong" in data and addr[0] not in self.target_ip:
-                self.check_peer(username, addr[0], port)
-            elif "pong" in data and port != self.target_ip[addr[0]][1]:
-                print("wtf")
+                print(f"{addr[0]} is {username}")
+                if self.check_peer(username, addr[0], self.port) and "ping" in data:
+                    self.udp_sender(f"pong {self.name}", addr[0], self.port)
+                    print("ponged")
+                elif self.check_peer(username, addr[0], self.port) and "pong" in data:
+                    print("user accepted")
             else:
                 if api.is_morse(data):
                     self.light(data)
 
-    def check_peer(self, username, ip, port):
+    def check_peer(self, username, ip: str, port: int = 2236):
         # Afficher à l'écran
         self.oled.fill(0)
         self.oled.text(f"Found {username}", 0, 0)
-        self.oled.text(f"{ip}:{port}", 0, 9)
+        self.oled.text(ip, 0, 9)
         self.oled.text(f"Add -> Green", 0, 19)
         self.oled.text(f"Refuse -> Red", 0, 29)
         self.oled.show()
-        pressed = False
-        while pressed is False:
+
+        while self.button_green.value() != 0 or self.button_red.value() != 0:
             if self.button_green.value() == 0:
                 self.target_ip[ip] = (username, port)
                 self.oled.fill(0)
                 self.oled.text(f"{username}", 0, 0)
                 self.oled.text(f"Accepted !", 0, 10)
                 self.oled.show()
-                pressed = True
+                return True
             elif self.button_red.value() == 0:
                 self.oled.fill(0)
                 self.oled.text(f"{username}", 0, 0)
                 self.oled.text(f"Rejected !", 0, 10)
                 self.oled.show()
-                pressed = True
+                return False
 
 
     def udp_sender(self, message: str, host, port: int = 2236):
@@ -185,9 +190,10 @@ if __name__ == "__main__":
     esp = ESP32("timtonix", my_local_ip())
     receiver = _thread.start_new_thread(esp.udp_receiver, ())
     scaner = _thread.start_new_thread(esp.udp_scan, ())
-    while esp.target_ip == []:
+    while esp.target_ip == {}:
         pass
     print(esp.target_ip)
+
 
 
 

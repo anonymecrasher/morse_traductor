@@ -28,9 +28,9 @@ def receive_pong():
         if "pong" in data:
             addr = addr[0]
             discovered_host = True
+        print(data)
 
-
-def send_message(message: str, host, port):
+def send_message(message: str, host, port=2236):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     request = message.encode()
     try:
@@ -38,16 +38,8 @@ def send_message(message: str, host, port):
     except OSError:
         print("Mon vieux t mort")
 
+
 if __name__ == "__main__":
-    """receiver = threading.Thread(target=receive_pong)
+    send_message("ping", "192.168.1.157")
+    receiver = threading.Thread(target=receive_pong)
     receiver.start()
-    for i in range(255):
-        LOCAL_IP[3] = i
-        ip = ".".join(map(str, LOCAL_IP))
-        sender = threading.Thread(target=send_udp_ping, args=(str(ip), 2236,))
-        sender.start()
-    receiver.join()
-    if addr != "":
-        print(f"The target device is {addr}")"""
-    send_udp_ping("192.168.1.157", 2236)
-    send_message("--- ... ---", "192.168.1.157", 2236)
